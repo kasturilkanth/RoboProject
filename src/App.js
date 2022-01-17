@@ -1,23 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
+import CardList from './CardList';
+import SearchBox from './SearchBox';
+import {useState,useEffect} from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  const[robots,setRobo]=useState([]);
+  const[searchField,setSearchField]=useState('');
+
+const handleChange=(mess)=>{
+ setSearchField(mess);
+}
+useEffect(() => {
+  fetch('https://jsonplaceholder.typicode.com/users')
+  .then(response => response.json())
+  .then(users => {
+    setRobo(users);
+  })
+});
+
+const filteredRobo=robots.filter((robo) => {
+  return robo.name.toLowerCase().includes(searchField.toLowerCase())
+})
+
+return (
+    <div className='tc'>
+    <h1>ROBO PROJECT</h1>
+    <SearchBox handleChange={handleChange}/>
+    <CardList robots={filteredRobo}/>
     </div>
   );
 }
